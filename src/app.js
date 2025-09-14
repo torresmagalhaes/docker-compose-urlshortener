@@ -1,3 +1,4 @@
+// app.js
 const express = require('express');
 const { authenticateToken, JWT_SECRET } = require('./infrastructure/middleware/auth');
 const pool = require('./infrastructure/database/connection');
@@ -14,6 +15,12 @@ const UrlService = require('./application/services/UrlService');
 const AuthController = require('./interfaces/http/AuthController');
 const UrlController = require('./interfaces/http/UrlController');
 
+// Database initialization
+const initDatabase = require('./infrastructure/database/init'); // cria as tabelas
+
+const app = express();
+app.use(express.json());
+
 // Initialize repositories
 const userRepository = new PostgresUserRepository(pool);
 const urlRepository = new PostgresUrlRepository(pool);
@@ -25,13 +32,20 @@ const urlService = new UrlService(urlRepository);
 // Initialize controllers
 const authController = new AuthController(authService);
 const urlController = new UrlController(urlService);
-const initDatabase = require('./infrastructure/database/init'); // cria esse arquivo
-
-const app = express();
-app.use(express.json());
 
 // Routes
 app.get('/', (req, res) => res.sendStatus(200));
+
+// Database setup route
+app.get('/setup', async (req, res) => {
+    try {
+        await initDatabase(); // cria as tabelas se não existirem
+        res.json({ message: 'Database initialized successfully' });
+    } catch (err) {
+        console.error('Error during setup:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
 
 // Auth routes
 app.post('/signup', (req, res) => authController.signup(req, res));
@@ -43,5 +57,6 @@ app.get('/urls', authenticateToken, (req, res) => urlController.listActive(req, 
 app.patch('/urls/:id', authenticateToken, (req, res) => urlController.delete(req, res));
 app.get('/:shortCode', (req, res) => urlController.redirect(req, res));
 
+// Start server
 const port = 3000;
 app.listen(port, () => console.log(`🚀 Server running on port ${port}`));
