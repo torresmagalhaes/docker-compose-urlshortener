@@ -57,3 +57,42 @@ Content-Type: application/json
     "password": "wrongPassword"
 }
 
+###
+# Shorten URL without authentication
+POST http://localhost:1500/shorten
+Content-Type: application/json
+
+{
+    "url": "https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/"
+}
+
+###
+# Shorten URL with authentication (replace TOKEN with the actual token from login response)
+POST http://localhost:1500/shorten
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+{
+    "url": "https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/"
+}
+
+###
+# Try to access shortened URL (replace CODE with the actual short_code from response)
+GET http://localhost:1500/ABC123
+
+###
+# Soft delete URL (replace ID with actual URL id and TOKEN with valid token)
+PATCH http://localhost:1500/urls/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+###
+# Soft delete user (replace ID with actual user id and TOKEN with valid token)
+PATCH http://localhost:1500/users/1
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+
+###
+# Try to access shortened URL (replace CODE with the actual short_code from response)
+GET http://localhost:1500/urls
+
