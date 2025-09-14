@@ -1,0 +1,83 @@
+###
+# Health Check
+GET http://localhost:1500
+
+### Authentication Tests ###
+
+# Create new user
+POST http://localhost:1500/signup
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "securePassword123"
+}
+
+###
+# Try to create duplicate user (should fail)
+POST http://localhost:1500/signup
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "anotherPassword"
+}
+
+###
+# Login with correct credentials
+POST http://localhost:1500/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "securePassword123"
+}
+
+###
+# Login with wrong password (should fail)
+POST http://localhost:1500/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "wrongPassword"
+}
+
+### URL Shortening Tests ###
+
+# Shorten URL without authentication
+POST http://localhost:1500/shorten
+Content-Type: application/json
+
+{
+    "url": "https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/"
+}
+
+###
+# Shorten URL with authentication
+# Replace TOKEN with the value from the login response
+POST http://localhost:1500/shorten
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+{
+    "url": "https://teddy360.com.br/material/marco-legal-das-garantias-sancionado-entenda-o-que-muda/"
+}
+
+###
+# List all active URLs (requires authentication)
+# Replace TOKEN with the value from the login response
+GET http://localhost:1500/urls
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+# Delete URL (requires authentication)
+# Replace ID with actual URL id and TOKEN with the value from login response
+PATCH http://localhost:1500/urls/1
+Content-Type: application/json
+Authorization: Bearer YOUR_TOKEN_HERE
+
+###
+# Access shortened URL
+# Replace CODE with the short_code from the shorten response
+GET http://localhost:1500/ABC123

@@ -11,7 +11,5 @@ RUN npm install
 # Copiar código fonte para a pasta src
 COPY src/ ./src/
 
-EXPOSE 3000
-
 # Comando para rodar a aplicação
 CMD ["node", "src/app.js"]
