@@ -1,3 +1,4 @@
+
 ###
 GET http://localhost:3000 
 ###
@@ -11,11 +12,11 @@ Content-Type: application/json
 
 ###
 # Create new user
-POST http://localhost:3000/signup
+POST http://localhost:1500/signup
 Content-Type: application/json
 
 {
-    "email": "test@example.com",
+    "email":  "test@example.com",
     "password": "securePassword123"
 }
 
@@ -25,10 +26,34 @@ POST http://localhost:1500/signup
 Content-Type: application/json
 
 {
-    "email": "test@example.com",
+    "email": "test@example1.com",
     "password": "anotherPassword"
 }
 
 ###
 # Setup
 GET http://localhost:1500/setup
+
+###
+GET http://localhost:1500/users
+
+###
+# Login with correct credentials
+POST http://localhost:1500/login
+Content-Type: application/json
+
+{
+    "email": "test@example1.com",
+    "password": "anotherPassword"
+}
+
+###
+# Login with wrong password
+POST http://localhost:1500/login
+Content-Type: application/json
+
+{
+    "email": "test@example.com",
+    "password": "wrongPassword"
+}
+

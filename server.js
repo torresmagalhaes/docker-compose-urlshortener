@@ -1,13 +1,64 @@
 const express = require('express');
 const pool = require('./db');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const port = 3000;
+
+// Secret key for JWT signing - in production, use environment variables
+const JWT_SECRET = 'your-secret-key';
 
 const app = express(); 
 app.use(express.json()); 
 
 app.get('/', async (req, res) => {
     res.sendStatus(200);
+});
+
+app.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find user by email
+        const user = await pool.query(
+            'SELECT * FROM users WHERE email = $1',
+            [email]
+        );
+
+        if (user.rows.length === 0) {
+            return res.status(401).json({
+                error: 'Invalid credentials - user not found'
+            });
+        }
+
+        // Verify password
+        const validPassword = await bcrypt.compare(password, user.rows[0].password_hash);
+        if (!validPassword) {
+            return res.status(401).json({
+                error: 'Invalid credentials - incorrect password'
+            });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { userId: user.rows[0].id, email: user.rows[0].email },
+            JWT_SECRET,
+            { expiresIn: '24h' }
+        );
+
+        // Send response with token
+        res.status(200).json({
+            message: 'Login successful',
+            token: token,
+            user: {
+                id: user.rows[0].id,
+                email: user.rows[0].email
+            }
+        });
+
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server error during login' });
+    }
 });
 
 app.post('/signup', async (req, res) => {
@@ -89,5 +140,9 @@ app.get('/setup', async (req, res) => {
     }
 });
 
+app.get('/users', async (req, res) => {
+    const data = await pool.query('SELECT * FROM users');
+    res.send(data.rows);
+});
 
 app.listen(port, () => console.log("Server is running on port " + port));
