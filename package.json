@@ -7,7 +7,7 @@
     "test": "jest",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
-    "dev": "node server.js"
+    "dev": "node src/app.js"
   },
   "keywords": [],
   "author": "",
