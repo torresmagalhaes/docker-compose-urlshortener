@@ -81,3 +81,7 @@ Authorization: Bearer YOUR_TOKEN_HERE
 # Access shortened URL
 # Replace CODE with the short_code from the shorten response
 GET http://localhost:1500/ABC123
+
+###
+# Setup
+GET http://localhost:1500/setup

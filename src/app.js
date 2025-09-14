@@ -25,6 +25,7 @@ const urlService = new UrlService(urlRepository);
 // Initialize controllers
 const authController = new AuthController(authService);
 const urlController = new UrlController(urlService);
+const initDatabase = require('./infrastructure/database/init'); // cria esse arquivo
 
 const app = express();
 app.use(express.json());
