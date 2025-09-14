@@ -3,27 +3,27 @@ class UrlController {
         this.urlService = urlService;
     }
 
-    async shorten(req, res) {
-        try {
-            const { url } = req.body;
-            const userId = req.user?.userId;
-            
-            if (!url) {
-                return res.status(400).json({ error: 'URL is required' });
-            }
-
-            const shortenedUrl = await this.urlService.createShortUrl(url, userId);
-            res.status(201).json({
-                original_url: url,
-                short_url: `http://localhost:1500/${shortenedUrl.shortCode}`,
-                short_code: shortenedUrl.shortCode,
-                created_at: shortenedUrl.createdAt
-            });
-        } catch (err) {
-            console.error(err.message);
-            res.status(500).json({ error: 'Server error while shortening URL' });
+async shorten(req, res) {
+    try {
+        const { url } = req.body;
+        const userId = req.user?.userId;
+        
+        if (!url) {
+            return res.status(400).json({ error: 'URL is required' });
         }
+
+        const shortenedUrl = await this.urlService.createShortUrl(url, userId);
+        res.status(201).json({
+            original_url: url,
+            short_url: `http://localhost:1500/${shortenedUrl.shortCode}`, // <- snake_case
+            short_code: shortenedUrl.shortCode, 
+            created_at: shortenedUrl.createdAt  
+        });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).json({ error: 'Server error while shortening URL' });
     }
+}
 
     async redirect(req, res) {
         try {

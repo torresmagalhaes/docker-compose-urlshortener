@@ -1,15 +1,15 @@
 class Url {
-    constructor(id, originalUrl, shortCode, userId, clicks, createdAt, updatedAt, deletedAt) {
+    constructor({ id, original_url, short_code, user_id, clicks, created_at, updated_at, deleted_at }) {
         this.id = id;
-        this.originalUrl = originalUrl;
-        this.shortCode = shortCode;
-        this.userId = userId;
+        this.originalUrl = original_url;
+        this.shortCode = short_code;
+        this.userId = user_id;
         this.clicks = clicks;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+        this.createdAt = created_at;
+        this.updatedAt = updated_at;
+        this.deletedAt = deleted_at;
     }
-
+    
     isDeleted() {
         return this.deletedAt !== null;
     }
