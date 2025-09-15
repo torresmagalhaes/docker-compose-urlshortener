@@ -27,14 +27,6 @@ O projeto segue a arquitetura DDD c## 🔑 Níveis de Acesso e Permissões
 - ❌ Gerenciar URLs de outros usuários
 - ❌ Ver estatísticas globais do sistema
 
-### Administrador
-- ✅ Todas as permissões de usuário autenticado
-- ✅ Gerenciar todos os usuários
-- ✅ Editar/deletar qualquer URL
-- ✅ Ver estatísticas globais do sistema
-- ✅ Configurar parâmetros do sistema
-- ✅ Ver logs de acesso detalhadosmadas:
-
 ### 📂 Estrutura de Diretórios
 ```
 src/
