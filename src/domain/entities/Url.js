@@ -1,15 +1,28 @@
 class Url {
-    constructor({ id, original_url, short_code, user_id, clicks, created_at, updated_at, deleted_at }) {
+    constructor(id, originalUrl, shortCode, userId, clicks, createdAt, updatedAt, deletedAt) {
         this.id = id;
-        this.originalUrl = original_url;
-        this.shortCode = short_code;
-        this.userId = user_id;
-        this.clicks = clicks;
-        this.createdAt = created_at;
-        this.updatedAt = updated_at;
-        this.deletedAt = deleted_at;
+        this.originalUrl = originalUrl;
+        this.shortCode = shortCode;
+        this.userId = userId;
+        this.clicks = clicks || 0;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+        this.deletedAt = deletedAt;
     }
-    
+
+    static fromDB(row) {
+        return new Url(
+            row.id,
+            row.original_url,
+            row.short_code,
+            row.user_id,
+            row.clicks,
+            row.created_at,
+            row.updated_at,
+            row.deleted_at
+        );
+    }
+
     isDeleted() {
         return this.deletedAt !== null;
     }
@@ -19,7 +32,7 @@ class Url {
     }
 
     incrementClicks() {
-        this.clicks += 1;
+        this.clicks = (this.clicks || 0) + 1;
     }
 }
 

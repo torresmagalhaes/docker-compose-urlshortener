@@ -12,7 +12,7 @@ class PostgresUrlRepository extends IUrlRepository {
             'SELECT * FROM urls WHERE id = $1 AND deleted_at IS NULL',
             [id]
         );
-        return result.rows[0] ? new Url(result.rows[0]) : null;
+        return result.rows[0] ? Url.fromDB(result.rows[0]) : null;
     }
 
     async findByShortCode(shortCode) {
@@ -20,7 +20,7 @@ class PostgresUrlRepository extends IUrlRepository {
             'SELECT * FROM urls WHERE short_code = $1 AND deleted_at IS NULL',
             [shortCode]
         );
-        return result.rows[0] ? new Url(result.rows[0]) : null;
+        return result.rows[0] ? Url.fromDB(result.rows[0]) : null;
     }
 
     async create(urlData) {
@@ -28,7 +28,7 @@ class PostgresUrlRepository extends IUrlRepository {
             'INSERT INTO urls (original_url, short_code, user_id) VALUES ($1, $2, $3) RETURNING *',
             [urlData.originalUrl, urlData.shortCode, urlData.userId]
         );
-        return new Url(result.rows[0]);
+        return Url.fromDB(result.rows[0]);
     }
 
     async update(url) {
@@ -36,7 +36,7 @@ class PostgresUrlRepository extends IUrlRepository {
             'UPDATE urls SET original_url = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
             [url.originalUrl, url.id]
         );
-        return new Url(result.rows[0]);
+        return Url.fromDB(result.rows[0]);
     }
 
     async softDelete(id) {
@@ -50,6 +50,21 @@ class PostgresUrlRepository extends IUrlRepository {
     async findActive() {
         const result = await this.pool.query(
             'SELECT * FROM urls WHERE deleted_at IS NULL'
+        );
+        return result.rows.map(row => new Url(row));
+    }
+
+    async findAll() {
+        const result = await this.pool.query(
+            'SELECT * FROM urls WHERE deleted_at IS NULL ORDER BY created_at DESC'
+        );
+        return result.rows.map(row => new Url(row));
+    }
+
+    async findByUserId(userId) {
+        const result = await this.pool.query(
+            'SELECT * FROM urls WHERE user_id = $1 AND deleted_at IS NULL ORDER BY created_at DESC',
+            [userId]
         );
         return result.rows.map(row => new Url(row));
     }

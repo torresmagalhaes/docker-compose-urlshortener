@@ -12,7 +12,7 @@ class PostgresUserRepository extends IUserRepository {
             'SELECT * FROM users WHERE id = $1 AND deleted_at IS NULL',
             [id]
         );
-        return result.rows[0] ? new User(result.rows[0]) : null;
+        return result.rows[0] ? User.fromDB(result.rows[0]) : null;
     }
 
     async findByEmail(email) {
@@ -20,7 +20,7 @@ class PostgresUserRepository extends IUserRepository {
             'SELECT * FROM users WHERE email = $1 AND deleted_at IS NULL',
             [email]
         );
-        return result.rows[0] ? new User(result.rows[0]) : null;
+        return result.rows[0] ? User.fromDB(result.rows[0]) : null;
     }
 
     async create(userData) {
@@ -28,7 +28,7 @@ class PostgresUserRepository extends IUserRepository {
             'INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING *',
             [userData.email, userData.passwordHash]
         );
-        return new User(result.rows[0]);
+        return User.fromDB(result.rows[0]);
     }
 
     async update(user) {
@@ -36,7 +36,7 @@ class PostgresUserRepository extends IUserRepository {
             'UPDATE users SET email = $1, updated_at = NOW() WHERE id = $2 RETURNING *',
             [user.email, user.id]
         );
-        return new User(result.rows[0]);
+        return User.fromDB(result.rows[0]);
     }
 
     async softDelete(id) {

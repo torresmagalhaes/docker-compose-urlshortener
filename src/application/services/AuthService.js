@@ -18,13 +18,10 @@ class AuthService {
     }
 
     async login(email, password) {
-        console.log('LOGIN password:', password);
-        
         const user = await this.userRepository.findByEmail(email);
         if (!user) {
             throw new Error('Invalid credentials');
         }
-        console.log('USER from DB:', user);
         
         const validPassword = await bcrypt.compare(password, user.passwordHash);
         if (!validPassword) {
@@ -38,6 +35,14 @@ class AuthService {
         );
 
         return { token, user };
+    }
+
+    async deleteUser(id) {
+        const user = await this.userRepository.findById(id);
+        if (!user) {
+            throw new Error('User not found');
+        }
+        await this.userRepository.softDelete(id);
     }
 }
 

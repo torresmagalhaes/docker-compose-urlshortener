@@ -150,4 +150,78 @@ describe('UrlService', () => {
                 .toThrow('Not authorized to delete this URL');
         });
     });
+
+    describe('listUrls', () => {
+        beforeEach(() => {
+            mockUrlRepository.findAll = jest.fn();
+            mockUrlRepository.findByUserId = jest.fn();
+        });
+
+        test('should list all URLs when no userId is provided', async () => {
+            const mockUrls = [
+                {
+                    id: 1,
+                    originalUrl: 'https://example1.com',
+                    shortCode: 'abc123',
+                    userId: 1,
+                    clicks: 0
+                },
+                {
+                    id: 2,
+                    originalUrl: 'https://example2.com',
+                    shortCode: 'def456',
+                    userId: 2,
+                    clicks: 5
+                }
+            ];
+
+            mockUrlRepository.findAll.mockResolvedValue(mockUrls);
+
+            const result = await urlService.listUrls();
+
+            expect(mockUrlRepository.findAll).toHaveBeenCalled();
+            expect(mockUrlRepository.findByUserId).not.toHaveBeenCalled();
+            expect(result).toEqual(mockUrls);
+        });
+
+        test('should list URLs filtered by userId when provided', async () => {
+            const userId = 1;
+            const mockUrls = [
+                {
+                    id: 1,
+                    originalUrl: 'https://example1.com',
+                    shortCode: 'abc123',
+                    userId: 1,
+                    clicks: 0
+                }
+            ];
+
+            mockUrlRepository.findByUserId.mockResolvedValue(mockUrls);
+
+            const result = await urlService.listUrls(userId);
+
+            expect(mockUrlRepository.findByUserId).toHaveBeenCalledWith(userId);
+            expect(mockUrlRepository.findAll).not.toHaveBeenCalled();
+            expect(result).toEqual(mockUrls);
+        });
+
+        test('should return empty array when no URLs found for user', async () => {
+            const userId = 999;
+            mockUrlRepository.findByUserId.mockResolvedValue([]);
+
+            const result = await urlService.listUrls(userId);
+
+            expect(mockUrlRepository.findByUserId).toHaveBeenCalledWith(userId);
+            expect(result).toEqual([]);
+        });
+
+        test('should return empty array when no URLs exist', async () => {
+            mockUrlRepository.findAll.mockResolvedValue([]);
+
+            const result = await urlService.listUrls();
+
+            expect(mockUrlRepository.findAll).toHaveBeenCalled();
+            expect(result).toEqual([]);
+        });
+    });
 });

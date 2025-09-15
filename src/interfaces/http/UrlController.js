@@ -54,10 +54,24 @@ async shorten(req, res) {
         }
     }
 
-    async listActive(req, res) {
+    async listUrls(req, res) {
         try {
-            const urls = await this.urlService.findActive();
-            res.json(urls);
+            const userId = req.query.userId; // Opcional
+            const urls = await this.urlService.listUrls(userId);
+            
+            res.json({
+                count: urls.length,
+                urls: urls.map(url => ({
+                    id: url.id,
+                    originalUrl: url.originalUrl,
+                    shortCode: url.shortCode,
+                    shortUrl: `http://localhost:1500/${url.shortCode}`,
+                    userId: url.userId,
+                    clicks: url.clicks,
+                    createdAt: url.createdAt,
+                    updatedAt: url.updatedAt
+                }))
+            });
         } catch (err) {
             console.error(err.message);
             res.status(500).json({ error: 'Server error fetching URLs' });

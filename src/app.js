@@ -50,10 +50,11 @@ app.get('/setup', async (req, res) => {
 // Auth routes
 app.post('/signup', (req, res) => authController.signup(req, res));
 app.post('/login', (req, res) => authController.login(req, res));
+app.patch('/users/:id', authenticateToken, (req, res) => authController.deleteUser(req, res));
 
 // URL routes
 app.post('/shorten', authenticateToken, (req, res) => urlController.shorten(req, res));
-app.get('/urls', authenticateToken, (req, res) => urlController.listActive(req, res));
+app.get('/urls', (req, res) => urlController.listUrls(req, res)); // Novo endpoint de listagem
 app.patch('/urls/:id', authenticateToken, (req, res) => urlController.delete(req, res));
 app.get('/:shortCode', (req, res) => urlController.redirect(req, res));
 

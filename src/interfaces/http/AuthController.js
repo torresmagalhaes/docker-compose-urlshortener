@@ -33,6 +33,28 @@ class AuthController {
             res.status(401).json({ error: err.message });
         }
     }
+
+    async deleteUser(req, res) {
+        try {
+            const { id } = req.params;
+            const userId = req.user.userId;
+
+            // Apenas o próprio usuário pode se deletar
+            if (parseInt(id) !== userId) {
+                return res.status(403).json({ error: 'Not authorized to delete this user' });
+            }
+
+            await this.authService.deleteUser(id);
+            res.json({ message: 'User successfully deleted' });
+        } catch (err) {
+            console.error(err.message);
+            if (err.message === 'User not found') {
+                res.status(404).json({ error: err.message });
+            } else {
+                res.status(500).json({ error: 'Server error while deleting user' });
+            }
+        }
+    }
 }
 
 module.exports = AuthController;

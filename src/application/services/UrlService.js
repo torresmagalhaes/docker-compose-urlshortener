@@ -31,8 +31,8 @@ class UrlService {
         if (!url) {
             throw new Error('URL not found');
         }
-        await this.urlRepository.incrementClicks(url.id);
-        return url;
+        const updatedUrl = await this.urlRepository.incrementClicks(url.id);
+        return updatedUrl;
     }
 
     async deleteUrl(id, userId) {
@@ -44,6 +44,13 @@ class UrlService {
             throw new Error('Not authorized to delete this URL');
         }
         return this.urlRepository.softDelete(id);
+    }
+
+    async listUrls(userId = null) {
+        if (userId) {
+            return this.urlRepository.findByUserId(userId);
+        }
+        return this.urlRepository.findAll();
     }
 }
 
