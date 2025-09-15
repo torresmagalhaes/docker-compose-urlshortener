@@ -1,11 +1,11 @@
 class User {
-    constructor(id, email, passwordHash, createdAt, updatedAt, deletedAt) {
-        this.id = id;
-        this.email = email;
-        this.passwordHash = passwordHash;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.deletedAt = deletedAt;
+    constructor(row) {
+        this.id = row.id;
+        this.email = row.email;
+        this.passwordHash = row.password_hash; // pega do banco
+        this.createdAt = row.created_at;
+        this.updatedAt = row.updated_at;
+        this.deletedAt = row.deleted_at;
     }
 
     isDeleted() {
