@@ -25,7 +25,6 @@ O projeto segue a arquitetura DDD c## 🔑 Níveis de Acesso e Permissões
 - ✅ Gerenciar seu perfil
 - ✅ Deletar suas próprias URLs
 - ❌ Gerenciar URLs de outros usuários
-- ❌ Ver estatísticas globais do sistema
 
 ### 📂 Estrutura de Diretórios
 ```
